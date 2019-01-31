@@ -635,10 +635,12 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
 {
 #if TARGET_OS_IPHONE
 	__block UIBackgroundTaskIdentifier backgroundTaskId = UIBackgroundTaskInvalid;
-	
-	backgroundTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithExpirationHandler:^
+
+    UIApplication *app = [[UIApplication class] performSelector:@selector(sharedApplication)];
+
+	backgroundTaskId = [app beginBackgroundTaskWithExpirationHandler:^
 	{
-		[[UIApplication sharedApplication] endBackgroundTask:backgroundTaskId];
+		[app endBackgroundTask:backgroundTaskId];
 		backgroundTaskId = UIBackgroundTaskInvalid;
 	}];
 	
@@ -646,7 +648,7 @@ static void AudioFileStreamPacketsProc(void* clientData, UInt32 numberBytes, UIn
 	{
 		if (backgroundTaskId != UIBackgroundTaskInvalid)
 		{
-			[[UIApplication sharedApplication] endBackgroundTask:backgroundTaskId];
+			[app endBackgroundTask:backgroundTaskId];
 			backgroundTaskId = UIBackgroundTaskInvalid;
 		}
 	} copy];
